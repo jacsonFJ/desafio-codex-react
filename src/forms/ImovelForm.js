@@ -9,27 +9,42 @@ class ImovelForm extends Component {
 
   get FORMZERADO() {
     return {
+      id: '',
       titulo: '',
       localizacao: '',
       tipo: 'Venda',
-      valor: ''
+      valor: '',
+      imagem: '/assets/predio.jpg'
     };
   }
 
   componentDidMount(){
-    this.selectIns = window.Materialize.FormSelect.init( document.getElementById('tipo') );
+    if(this.props.imovel){
+      this.setState(this.props.imovel);
+    }
+    setTimeout(() => this.selectIns = window.Materialize.FormSelect.init( document.getElementById('tipo'+this.state.id) ), 500);
     window.Materialize.updateTextFields();
   }
 
+  carregaImagem(e){
+    if(e.target.files[0]){
+      let reader = new FileReader();
+      reader.onload = arq => this.setState({ imagem: arq.target.result });
+      reader.readAsDataURL(e.target.files[0]);
+    }else{
+      alert('Favor selecione uma foto!');
+    }
+  }
+
   closeModal(){
-    this.setState(this.FORMZERADO);
-    let instance = window.Materialize.Modal.init(document.getElementById('modalImovelForm'));
-    this.selectIns.input.value = 'Venda'
+    this.setState(this.props.imovel ? this.props.imovel : this.FORMZERADO);
+    this.selectIns.input.value = this.props.imovel ? this.props.imovel.tipo : 'Venda';
+    let instance = window.Materialize.Modal.init(document.getElementById('modalImovelForm'+this.state.id));
     instance.close();
   }
 
   onChange(e) {
-    this.setState({ [e.target.id]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   onSubmit(e) {
@@ -39,37 +54,48 @@ class ImovelForm extends Component {
       return false;
     }
 
-    this.props.submit(this.state);
+    this.props.submit(JSON.parse(JSON.stringify(this.state)));
     this.closeModal();
   }
 
   render() {
     return (
-      <div id="modalImovelForm" className="modal">
+      <div id={'modalImovelForm'+this.state.id} className="modal imovelForm">
         <form onSubmit={this.onSubmit.bind(this)}>
           <div className="modal-content">
             <h4>Novo Imóvel</h4>
             <div className="row">
               <div className="input-field col s12 m6">
-                <input placeholder="Digite o título do imóvel" id="titulo" type="text" className="validate" value={this.state.titulo} onChange={this.onChange.bind(this)} />
-                <label htmlFor="titulo">Título</label>
+                <input name="titulo" placeholder="Digite o título do imóvel" type="text" className="validate" value={this.state.titulo} onChange={this.onChange.bind(this)} />
+                <label>Título</label>
               </div>
               <div className="input-field col s12 m6">
-                <input id="localizacao" placeholder="Digite a localização do imóvel" type="text" className="validate" value={this.state.localizacao} onChange={this.onChange.bind(this)} />
-                <label htmlFor="localizacao">Localização</label>
+                <input name="localizacao" placeholder="Digite a localização do imóvel" type="text" className="validate" value={this.state.localizacao} onChange={this.onChange.bind(this)} />
+                <label>Localização</label>
               </div>
             </div>
             <div className="row">
               <div className="input-field col s6 m4">
-                <select id="tipo" value={this.state.tipo} onChange={this.onChange.bind(this)}>
+                <select name="tipo" id={'tipo'+this.state.id} value={this.state.tipo} onChange={this.onChange.bind(this)}>
                   <option value="Venda">Venda</option>
                   <option value="Locação">Locação</option>
                 </select>
-                <label htmlFor="tipo">Tipo</label>
+                <label>Tipo</label>
               </div>
               <div className="input-field col s6 m4">
-                <input id="valor" placeholder="Digite o valor do imóvel" type="text" className="validate" value={this.state.valor} onChange={this.onChange.bind(this)} />
-                <label htmlFor="valor">Valor do Imóvel</label>
+                <input name="valor" placeholder="Digite o valor do imóvel" type="text" className="validate" value={this.state.valor} onChange={this.onChange.bind(this)} />
+                <label>Valor do Imóvel</label>
+              </div>
+            </div>
+            <div className="row">
+              <div className="file-field input-field col s12">
+                <div className="btn">
+                  <span>Foto</span>
+                  <input type="file" onChange={this.carregaImagem.bind(this)}/>
+                </div>
+                <div className="file-path-wrapper">
+                  <input className="file-path validate" type="text"/>
+                </div>
               </div>
             </div>
           </div>

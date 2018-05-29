@@ -22,10 +22,23 @@ class Imoveis extends Component {
   }
 
   addImovel(imovel){
-    imovel['id'] = this.state.imoveis.length + 1;
+    imovel.id = this.state.imoveis.length + 1;
     let imoveis = this.state.imoveis;
     imoveis.push(imovel);
     this.setState({ imoveis: imoveis });
+  }
+
+  editImovel(imovel){
+    let imoveis = this.state.imoveis;
+    imoveis[imovel.id-1] = imovel;
+    this.setState({ imoveis: imoveis });
+  }
+
+  rmvImovel(id){
+    let imo = this.state.imoveis;
+    imo.splice(id-1, 1);
+    imo.forEach((ele, ind) => imo[ind].id = ind+1);// Refaz os ids
+    this.setState({ imoveis: imo });
   }
   
   render() {
@@ -37,7 +50,7 @@ class Imoveis extends Component {
           <div className="row">
             { this.state.imoveis.map( imo => (
               <div key={imo.id} className="col s12 m4 l3">
-                <CardImovel {...imo} />
+                <CardImovel {...imo} remover={this.rmvImovel.bind(this)} editar={this.editImovel.bind(this)}/>
               </div>
             ))}
           </div>

@@ -35,8 +35,8 @@ body {
 }
 
 /* ImovelForm */
-#modalImovelForm button.btn{
-  margin-right: 10px;
+div.imovelForm button.btn{
+  margin-right: 10px !important;
 }
 
 /* CardImovel */
@@ -52,4 +52,9 @@ body {
   right: 0;
   max-width: 100%;
   padding: 24px;
+}
+
+.card-fab {
+  position: relative;
+  z-index: 1;
 }
