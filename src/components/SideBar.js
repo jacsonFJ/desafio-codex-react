@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 class SideBar extends Component {
   render() {
     return (
-      <div>
+      <div id="side-nav">
         <div className="row">
           <div className="container">
             <img className="responsive-img" src="/assets/logo.png" alt="TecImob"/>
@@ -21,6 +21,9 @@ class SideBar extends Component {
               Imóveis
             </Link>
           </div>
+        </div>
+        <div className="center-align" id="footer">
+          <span className="white-text">2015 - Tecimob</span>
         </div>
       </div>
     );
